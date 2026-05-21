@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import BookmarkButton from "@/components/BookmarkButton";
+import EpisodeList from "@/components/EpisodeList";
 import { safeImage } from "@/lib/image";
 import { Metadata } from "next";
 
@@ -71,6 +72,7 @@ export default async function SeriesDetailPage({
             fill
             sizes="100vw"
             priority
+            quality={50}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
         </div>
@@ -86,6 +88,7 @@ export default async function SeriesDetailPage({
               fill
               sizes="(max-width: 1024px) 100vw, 33vw"
               priority
+              quality={100}
             />
           </div>
 
@@ -200,49 +203,13 @@ export default async function SeriesDetailPage({
 
       {/* Episodes Section */}
       {series.episodes && series.episodes.length > 0 && (
-        <section>
-          <div className="flex items-end justify-between mb-6 border-b border-white/5 pb-4">
-            <h2 className="font-display text-2xl font-black text-white uppercase tracking-tight flex items-center gap-2">
-              <span className="text-[#00f4fe] font-black">▶</span> Episodes
-            </h2>
-            <span className="text-[#00f4fe] text-xs font-bold uppercase tracking-wider bg-[#00f4fe]/10 px-3 py-1 rounded-full border border-[#00f4fe]/20">
-              Season 1 {series.info.release_date && series.info.release_date !== "-" ? `| ${series.info.release_date.split(" ")[2] || 2024}` : ""}
-            </span>
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {series.episodes.map((ep) => (
-              <Link
-                key={ep.id}
-                href={`/episode/${ep.id}`}
-                className="flex flex-col md:flex-row gap-5 p-4 rounded-[20px] transition-all cursor-pointer group border border-white/5 liquid-glass-card shadow-lg hover:scale-[1.01]"
-                style={{ background: 'rgba(20, 19, 21, 0.45)', backdropFilter: 'blur(25px)' }}
-              >
-                <div className="relative md:w-60 aspect-video rounded-xl overflow-hidden shrink-0 border border-white/10">
-                  <Image
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    src={safeImage(series.image)}
-                    alt={ep.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 240px"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="material-symbols-outlined text-white text-4xl font-bold bg-[#00f4fe] p-2.5 rounded-full shadow-[0_0_20px_rgba(0,244,254,0.6)]">play_arrow</span>
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center gap-2 text-left">
-                  <span className="text-[#00f4fe] text-[9px] font-extrabold uppercase tracking-wider">
-                    Episode {ep.number || ep.title.match(/\d+/)?.[0] || ep.title.replace("Episode ", "") || "01"}
-                  </span>
-                  <h3 className="font-bold text-lg text-white group-hover:text-[#00f4fe] transition-colors">{ep.title}</h3>
-                  <p className="text-on-surface-variant text-xs sm:text-sm line-clamp-2 leading-relaxed opacity-95">
-                    Saksikan episode terbaru dari {series.title}. Tonton streaming HD gratis.
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+        <EpisodeList
+          episodes={series.episodes}
+          animeTitle={series.title}
+          animeImage={series.image}
+          season={series.info.season}
+          releaseDate={series.info.release_date}
+        />
       )}
 
       {/* Recommendations */}
@@ -265,6 +232,7 @@ export default async function SeriesDetailPage({
                     fill
                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
                     loading="lazy"
+                    quality={90}
                   />
                   <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-background to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <div className="flex items-center justify-between text-[9px] font-bold text-white uppercase tracking-wider">

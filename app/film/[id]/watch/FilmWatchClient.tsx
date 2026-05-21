@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { safeImage } from "@/lib/image";
 
 interface FilmWatchClientProps {
   filmId: string;
@@ -152,11 +154,14 @@ export default function FilmWatchClient({ filmId, data }: FilmWatchClientProps) 
             {data.recommendations.slice(0, 5).map((item, index) => (
               <Link key={`${item.id}-${index}`} href={getHref(item)} className="group cursor-pointer block">
                 <div className="relative aspect-[2/3] rounded-[20px] overflow-hidden mb-3 conic-border-hover liquid-glass-card border border-white/5">
-                  <img
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    src={item.image}
+                  <Image
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    src={safeImage(item.image)}
                     alt={item.title}
+                    fill
+                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
                     loading="lazy"
+                    quality={90}
                   />
                   <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-background to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <div className="flex items-center justify-between text-[9px] font-bold text-white uppercase tracking-wider">

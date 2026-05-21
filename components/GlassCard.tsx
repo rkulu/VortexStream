@@ -26,7 +26,8 @@ export default function GlassCard({
         fill
         className="object-cover transition-transform duration-500 group-hover:scale-110"
         loading="lazy"
-        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+        quality={90}
+        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
       />
       {badge && (
         <div className="absolute top-3 left-3 px-2.5 py-1 text-[9px] sm:text-[10px] font-bold rounded-lg backdrop-blur-md bg-black/60 text-white border border-white/10 z-10 uppercase tracking-wider">

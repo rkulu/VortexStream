@@ -13,13 +13,11 @@ export function ErrorBoundary({ children, fallback }: ErrorBoundaryProps) {
 
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
-      console.error('Error caught by boundary:', event.error);
       setHasError(true);
       setError(event.error);
     };
 
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      console.error('Unhandled promise rejection:', event.reason);
       setHasError(true);
       setError(new Error(event.reason?.message || 'An unexpected error occurred'));
     };

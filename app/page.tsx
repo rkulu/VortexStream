@@ -6,27 +6,18 @@ import Link from "next/link";
 import RowCard from "@/components/RowCard";
 import LandscapeCard from "@/components/LandscapeCard";
 import BookmarkButton from "@/components/BookmarkButton";
+import NotificationBanner from "@/components/NotificationBanner";
+import Image from "next/image";
+import { safeImage } from "@/lib/image";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const [homeData, popularData, genresData, ongoingData] = await Promise.all([
-    getHomeData().catch((error) => {
-      console.error('Error fetching home data:', error);
-      return null;
-    }),
-    getPopular().catch((error) => {
-      console.error('Error fetching popular data:', error);
-      return null;
-    }),
-    getGenres().catch((error) => {
-      console.error('Error fetching genres data:', error);
-      return null;
-    }),
-    getOngoing(1).catch((error) => {
-      console.error('Error fetching ongoing data:', error);
-      return null;
-    }),
+    getHomeData().catch(() => null),
+    getPopular().catch(() => null),
+    getGenres().catch(() => null),
+    getOngoing(1).catch(() => null),
   ]);
 
   if (!homeData || !homeData.data) {
@@ -63,7 +54,7 @@ export default async function Home() {
   const genreTop20 = genresData?.data?.slice(0, 20) || [];
 
   // Ongoing Gems Mapping
-  const ongoingGems = (ongoingData?.results?.slice(0, 3) || top10_anime.slice(7, 10)).map((item, idx) => {
+  const ongoingGems = (ongoingData?.data?.slice(0, 3) || top10_anime.slice(7, 10)).map((item, idx) => {
     const days = ["Mondays", "Thursdays", "Sundays"];
     const percentages = [42, 42, 83];
     return {
@@ -78,73 +69,115 @@ export default async function Home() {
   return (
     <div className="space-y-6 sm:space-y-8 lg:space-y-10 pb-8 sm:pb-10 lg:pb-12 font-sans">
 
-      {/* Cinematic Hero Slider - Fluid Glass styled banner */}
+      <NotificationBanner />
+
+      {/* Featured Hero Banner */}
       {sliderItems.length > 0 && (
-        <section className="relative rounded-2xl sm:rounded-[24px] lg:rounded-[28px] overflow-hidden aspect-[4/3] sm:aspect-[16/7] lg:aspect-[21/9] group border border-white/10 shadow-[0_12px_45px_rgba(0,0,0,0.6)]">
-          {/* Background image & gradient overlays */}
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-            style={{ backgroundImage: `url(${sliderItems[0].image})` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-[#131315] via-transparent to-black/30"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#131315]/90 via-[#131315]/40 to-transparent"></div>
+        <section className="relative rounded-2xl sm:rounded-[24px] lg:rounded-[28px] overflow-hidden border border-white/10 shadow-[0_12px_45px_rgba(0,0,0,0.6)]">
+          {/* Background banner image */}
+          <div className="relative w-full aspect-[16/10] sm:aspect-[16/7] lg:aspect-[21/8]">
+            <Image
+              src={safeImage(sliderItems[0].image)}
+              alt={sliderItems[0].title}
+              fill
+              className="object-cover"
+              priority
+              quality={90}
+              sizes="100vw"
+            />
+            {/* Gradient overlays */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#131315] via-[#131315]/30 to-black/20"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#131315]/95 via-[#131315]/50 to-transparent"></div>
+            {/* Right-side gradient to blend poster on desktop */}
+            <div className="absolute inset-0 hidden md:block bg-gradient-to-l from-[#131315]/80 via-transparent to-transparent"></div>
           </div>
 
-          {/* Floating Glass Detail Board */}
-          <div className="absolute bottom-3 left-3 sm:bottom-6 sm:left-6 md:bottom-8 md:left-8 max-w-[85%] sm:max-w-md md:max-w-xl z-10">
-            <div
-              className="p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-[24px] border border-white/10 flex flex-col gap-2 sm:gap-4 shadow-2xl relative overflow-hidden"
-              style={{ background: 'rgba(20, 19, 21, 0.45)', backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)' }}
-            >
-              <div className="absolute top-0 left-0 w-[3px] sm:w-[4px] h-full bg-[#00f4fe]"></div>
+          {/* Content overlay with flex layout */}
+          <div className="absolute inset-0 flex items-end sm:items-center z-10">
+            <div className="flex items-end sm:items-center justify-between w-full px-4 pb-4 sm:px-6 sm:pb-0 md:px-8 lg:px-10 gap-4 md:gap-8 lg:gap-12">
 
-              <div className="flex items-center gap-2 sm:gap-3">
-                <span className="bg-[#00f4fe]/15 text-[#00f4fe] px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] font-bold uppercase tracking-wider border border-[#00f4fe]/25">
-                  Featured
-                </span>
-                <div className="flex items-center gap-1 text-[#e0b6ff]">
-                  <span className="material-symbols-outlined text-xs sm:text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                  <span className="text-[10px] sm:text-xs font-bold">{sliderItems[0].rating}</span>
+              {/* Left: Glass Info Card */}
+              <div className="flex-1 min-w-0 max-w-xl lg:max-w-2xl">
+                <div
+                  className="p-4 sm:p-6 md:p-7 lg:p-8 rounded-2xl sm:rounded-[24px] border border-white/10 flex flex-col gap-2.5 sm:gap-3.5 md:gap-4 shadow-2xl relative overflow-hidden"
+                  style={{ background: 'rgba(20, 19, 21, 0.5)', backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)' }}
+                >
+                  <div className="absolute top-0 left-0 w-[3px] sm:w-[4px] h-full bg-gradient-to-b from-[#00f4fe] to-[#9d4edd]"></div>
+
+                  {/* Badges */}
+                  <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                    <span className="bg-[#00f4fe]/15 text-[#00f4fe] px-2.5 py-1 rounded-full text-[8px] sm:text-[9px] font-bold uppercase tracking-wider border border-[#00f4fe]/25">
+                      Featured
+                    </span>
+                    <div className="flex items-center gap-1 text-[#e0b6ff]">
+                      <span className="material-symbols-outlined text-xs sm:text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="text-[10px] sm:text-xs font-bold">{sliderItems[0].rating}</span>
+                    </div>
+                    {sliderItems[0].type && (
+                      <span className="bg-[#9d4edd]/15 text-[#e0b6ff] px-2.5 py-1 rounded-full text-[8px] sm:text-[9px] font-bold uppercase tracking-wider border border-[#9d4edd]/25 hidden sm:inline-block">
+                        {sliderItems[0].type}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Title */}
+                  <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-[2.5rem] font-display font-extrabold text-white leading-[1.15] tracking-tight uppercase line-clamp-2">
+                    {sliderItems[0].title}
+                  </h1>
+
+                  {/* Description */}
+                  <p className="text-on-surface-variant text-[11px] sm:text-xs md:text-sm line-clamp-2 leading-relaxed opacity-90 hidden sm:block">
+                    Saksikan tayangan mahakarya {sliderItems[0].title} secara eksklusif dengan kualitas video Ultra HD 4K dan server streaming berkecepatan tinggi.
+                  </p>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-2.5 sm:gap-3 mt-1 sm:mt-2">
+                    <Link
+                      href={`/anime/${sliderItems[0].id}`}
+                      className="flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-[#9d4edd] to-[#00f4fe] text-white px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-bold hover:shadow-[0_0_30px_rgba(0,219,231,0.4)] transition-all active:scale-95 text-[10px] sm:text-xs tracking-wider uppercase"
+                    >
+                      <span className="material-symbols-outlined text-sm sm:text-base font-bold" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
+                      Watch Now
+                    </Link>
+
+                    <BookmarkButton
+                      id={sliderItems[0].id}
+                      title={sliderItems[0].title}
+                      image={safeImage(sliderItems[0].image)}
+                      type="anime"
+                      rating={sliderItems[0].rating}
+                      variant="circle"
+                    />
+                  </div>
                 </div>
               </div>
 
-              <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-display font-extrabold text-white leading-tight tracking-tight uppercase line-clamp-2">
-                {sliderItems[0].title}
-              </h1>
-
-              <p className="text-on-surface-variant text-[10px] sm:text-xs md:text-sm line-clamp-2 leading-relaxed opacity-90 hidden sm:block">
-                Saksikan tayangan mahakarya {sliderItems[0].title} secara eksklusif dengan kualitas video Ultra HD 4K dan server streaming berkecepatan tinggi.
-              </p>
-
-              <div className="flex items-center gap-2 sm:gap-3 sm:mt-2">
-                <Link
-                  href={`/anime/${sliderItems[0].id}`}
-                  className="flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-[#9d4edd] to-[#00f4fe] text-white px-4 sm:px-7 py-2 sm:py-3 rounded-full font-bold hover:hero-glow transition-all active:scale-95 text-[10px] sm:text-xs tracking-wider uppercase"
-                >
-                  <span className="material-symbols-outlined text-xs sm:text-sm font-bold" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
-                  Watch Now
-                </Link>
-
-                <BookmarkButton
-                  id={sliderItems[0].id}
-                  title={sliderItems[0].title}
-                  image={sliderItems[0].image}
-                  type="anime"
-                  rating={sliderItems[0].rating}
-                  variant="circle"
-                />
+              {/* Right: Portrait Poster (hidden on small screens) */}
+              <div className="hidden md:flex items-center justify-center flex-shrink-0">
+                <div className="relative group">
+                  {/* Glow effect behind poster */}
+                  <div className="absolute -inset-3 bg-gradient-to-br from-[#9d4edd]/30 via-[#00f4fe]/20 to-[#d422a7]/20 rounded-[28px] blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                  {/* Poster card */}
+                  <div className="relative w-[180px] lg:w-[220px] xl:w-[240px] aspect-[2/3] rounded-2xl lg:rounded-[24px] overflow-hidden border border-white/15 shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-[1.03]">
+                    <Image
+                      src={safeImage(sliderItems[0].image)}
+                      alt={sliderItems[0].title}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 220px, 180px"
+                      quality={85}
+                    />
+                    {/* Subtle gradient overlay at bottom */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                    {/* Rating badge on poster */}
+                    <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-[#e0b6ff] px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider border border-white/10 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      {sliderItems[0].rating}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* Slider indicators */}
-          <div className="absolute bottom-3 right-3 sm:bottom-8 sm:right-8 flex items-center gap-2 sm:gap-3 z-10">
-            <button className="size-8 sm:size-10 rounded-full border border-white/20 bg-black/40 text-white hover:bg-white/10 active:scale-90 transition-all flex items-center justify-center">
-              <span className="material-symbols-outlined text-xs sm:text-sm">chevron_left</span>
-            </button>
-            <button className="size-8 sm:size-10 rounded-full border border-white/20 bg-black/40 text-white hover:bg-white/10 active:scale-90 transition-all flex items-center justify-center">
-              <span className="material-symbols-outlined text-xs sm:text-sm">chevron_right</span>
-            </button>
           </div>
         </section>
       )}
@@ -161,7 +194,7 @@ export default async function Home() {
           >
             <img
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj1V9bzLv7MBMGZt-kQrtyECICXyCuLhNmEK24Ddx_OnL7GRZE-CK_zLn9llaZ1rpc_rqFFpu7QC1ElL4q0hZnU1WbFBc6qz1L9PjS9BQIRyMosv8vllQvXRKhWToYrurvzY1qcfahStusj7mtuOiBDGA44ACXvDLzv53LRdwiyzCz28eKO8DvvObbM2QFaIgiQCHEfYA_9oeq4Rj1dnxDKPOI767cmFnmLwk-Jfo11zwp4IZN7aQ4loIZeV-T7PhVS7oCIJeUlG5e"
+              src="/image/anime.png"
               alt="Anime Category"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent p-4 sm:p-6 md:p-8 flex flex-col justify-center gap-1 sm:gap-1.5">
@@ -182,7 +215,7 @@ export default async function Home() {
             >
               <img
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuABDdmRUmaq8aCn6yZkFDadGSKkPtZ4mZOdLEQkgnOFCXJlG9PRFZN0et0_GOohTI0ExTLWy0hb7FP5_zudQP633PpYS6WQ4qHFz9UnS5vm5XgBdY_myX2VDpeOpm-r1N5FyvUewOgxjBmAqrn62qvqjRMkLFdC-C1z1ICR3l02anhHfdmVEl5RkUxUSSxInI6JjX9bw_lxOKLEdfo-uf8p9igivtFzddc22SS3GUDNSugjNCVIDq-5n8wTAKxZARfHnju84THm4DeH"
+                src="/image/series.png"
                 alt="Series"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-4 sm:p-5 flex flex-col justify-end">
@@ -197,7 +230,7 @@ export default async function Home() {
             >
               <img
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFx3g6p81EBLPubac-LLIJNqTytAJLUT0jSF7T_o9WFo3Mdp2hd1jMp4mCKCSZNBtzPoQjWSpTgky6uCqrLnCsLoNZf3vDyHYv1YkfOKrR7tFrpQvLW0z1WLFRgkl3nrczwnFi9KKBKCYcycwVVbyODJlyfiE8Vgjp9qG7_Ji4YDWeo0CSnvBoeHSMsExy1wqQEvy-EFZw1uZDR8d3cDdlcFIqrBe9wgPEBAZ5JKbr9Fk27lF8Y01DFt8EKEebjzu13ZOEG2qM0nGi"
+                src="/image/blockbuster.png"
                 alt="Blockbuster Movies"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-4 sm:p-5 flex flex-col justify-end">
@@ -231,7 +264,7 @@ export default async function Home() {
                     <div className="relative aspect-[2/3] rounded-[20px] overflow-hidden mb-3 border border-white/5 shadow-lg liquid-glass-card">
                       <img
                         className="w-full h-full object-cover transition-transform duration-500"
-                        src={item.image}
+                        src={safeImage(item.image)}
                         alt={item.title}
                         loading="lazy"
                       />
@@ -297,7 +330,7 @@ export default async function Home() {
                     <div className="h-36 sm:h-44 overflow-hidden relative">
                       <img
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        src={item.image}
+                        src={safeImage(item.image)}
                         alt={item.title}
                         loading="lazy"
                       />
@@ -345,7 +378,7 @@ export default async function Home() {
                     style={{ background: 'rgba(20, 19, 21, 0.45)', backdropFilter: 'blur(20px)' }}
                   >
                     <div className="size-14 sm:size-16 rounded-xl sm:rounded-[14px] overflow-hidden shrink-0 border border-white/10">
-                      <img src={gem.image} alt={gem.title} className="w-full h-full object-cover" />
+                      <img src={safeImage(gem.image)} alt={gem.title} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1 min-w-0 space-y-1 sm:space-y-1.5">
                       <h3 className="font-bold text-xs sm:text-sm text-white truncate group-hover:text-[#00f4fe]">{gem.title}</h3>
@@ -369,7 +402,7 @@ export default async function Home() {
             <section>
               <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <h2 className="font-display text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                  <span className="text-[#00f4fe] font-black">▶</span> K-Drama Terpopuler
+                  <span className="text-[#00f4fe] font-black">▶</span> Series Terpopuler
                 </h2>
                 <Link href="/series" className="text-[10px] sm:text-xs font-bold text-[#00f4fe] hover:underline uppercase tracking-wider">Lihat Semua</Link>
               </div>

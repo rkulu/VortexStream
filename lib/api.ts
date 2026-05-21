@@ -22,8 +22,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://www.sankavolle
 
 async function fetchApi<T>(endpoint: string, revalidate: number = 3600): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
-  console.log('Fetching API endpoint:', url);
-  
   try {
     const res = await fetch(url, {
       next: {
@@ -35,12 +33,10 @@ async function fetchApi<T>(endpoint: string, revalidate: number = 3600): Promise
       if (res.status === 404) {
         throw new Error(`Endpoint not found: ${endpoint}`);
       }
-      console.error('API error response:', res.status, res.statusText);
       throw new Error(`API Error ${res.status}: Failed to fetch ${endpoint}`);
     }
 
     const data = await res.json();
-    console.log('API response data for', endpoint, data);
     
     if (!data) {
       throw new Error(`Empty response data for ${endpoint}`);
@@ -48,7 +44,6 @@ async function fetchApi<T>(endpoint: string, revalidate: number = 3600): Promise
     
     return data;
   } catch (error) {
-    console.error('Fetch error for', endpoint, error);
     throw error;
   }
 }
@@ -157,7 +152,6 @@ export async function getFilmList(
       300
     );
   } catch (e) {
-    console.warn('Film endpoint failed, falling back to home data', e);
     const home = await getHomeData();
     return {
       status: home.status,
@@ -176,7 +170,6 @@ export async function getSeriesList(
       300
     );
   } catch (e) {
-    console.warn('Series endpoint failed, falling back to home data', e);
     const home = await getHomeData();
     return {
       status: home.status,
@@ -195,7 +188,6 @@ export async function getTvShowList(
       300
     );
   } catch (e) {
-    console.warn('TV Show endpoint failed, falling back to home data', e);
     const home = await getHomeData();
     return {
       status: home.status,
@@ -214,7 +206,6 @@ export async function getOthersList(
       300
     );
   } catch (e) {
-    console.warn('Others endpoint failed, falling back to home data', e);
     const home = await getHomeData();
     return {
       status: home.status,
@@ -230,7 +221,6 @@ export async function getAnimedonghua(
   try {
     return await fetchApi<ListResponse>(`/animedonghua${buildPageQuery(page)}`, 300);
   } catch (e) {
-    console.warn('animedonghua endpoint failed, falling back to home data', e);
     const home = await getHomeData();
     return { status: home.status, creator: home.creator, data: home.data.latest_anime } as ListResponse;
   }
@@ -316,7 +306,6 @@ export async function getUpdated(
   try {
     return await fetchApi<ListResponse>(`/updated${buildPageQuery(page)}`, 60);
   } catch (e) {
-    console.warn('updated endpoint failed, falling back to home data', e);
     const home = await getHomeData();
     return { status: home.status, creator: home.creator, data: home.data.latest_anime } as ListResponse;
   }
@@ -328,7 +317,6 @@ export async function getLatest(
   try {
     return await fetchApi<ListResponse>(`/latest${buildPageQuery(page)}`, 60);
   } catch (e) {
-    console.warn('latest endpoint failed, falling back to home data', e);
     const home = await getHomeData();
     return { status: home.status, creator: home.creator, data: home.data.latest_anime } as ListResponse;
   }
@@ -340,7 +328,6 @@ export async function getOngoing(
   try {
     return await fetchApi<ListResponse>(`/ongoing${buildPageQuery(page)}`, 60);
   } catch (e) {
-    console.warn('ongoing endpoint failed, falling back to home data', e);
     const home = await getHomeData();
     return { status: home.status, creator: home.creator, data: home.data.top10_anime } as ListResponse;
   }
@@ -352,7 +339,6 @@ export async function getCompleted(
   try {
     return await fetchApi<ListResponse>(`/completed${buildPageQuery(page)}`, 300);
   } catch (e) {
-    console.warn('completed endpoint failed, falling back to home data', e);
     const home = await getHomeData();
     return { status: home.status, creator: home.creator, data: home.data.top10_anime } as ListResponse;
   }
@@ -367,7 +353,6 @@ export async function getAllAnime(
       300
     );
   } catch (e) {
-    console.warn('all-anime endpoint failed, falling back to home data', e);
     const home = await getHomeData();
     return {
       status: home.status,

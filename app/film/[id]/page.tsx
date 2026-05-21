@@ -78,6 +78,7 @@ export default async function FilmDetailPage({
             fill
             sizes="100vw"
             priority
+            quality={50}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
         </div>
@@ -93,6 +94,7 @@ export default async function FilmDetailPage({
               fill
               sizes="(max-width: 1024px) 100vw, 33vw"
               priority
+              quality={100}
             />
           </div>
 
@@ -254,6 +256,7 @@ export default async function FilmDetailPage({
                     fill
                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
                     loading="lazy"
+                    quality={90}
                   />
                   <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-background to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <div className="flex items-center justify-between text-[9px] font-bold text-white uppercase tracking-wider">

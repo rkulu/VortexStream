@@ -60,7 +60,6 @@ export default async function EpisodePage({
     }
     data = json.data;
   } catch (error) {
-    console.error("Error fetching episode:", error);
     return <ServerNotFound />;
   }
 

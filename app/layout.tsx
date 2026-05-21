@@ -5,6 +5,7 @@ import AsideSidebar from "@/components/AsideSidebar";
 import TopHeader from "@/components/TopHeader";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import { getSiteMetadata } from "@/lib/settings";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -17,33 +18,41 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "VortexStream - Premium Streaming",
-  description: "Streaming anime terlengkap dengan kualitas terbaik. Nonton anime, film, dan series favorit kamu secara gratis.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.sankavollerei.com'),
-  openGraph: {
-    title: "VortexStream - Premium Streaming",
-    description: "Streaming anime terlengkap dengan kualitas terbaik.",
-    url: "/",
-    siteName: "VortexStream",
-    images: [
-      {
-        url: "/images/placeholder.webp",
-        width: 1200,
-        height: 630,
-        alt: "VortexStream",
-      },
-    ],
-    locale: "id_ID",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "VortexStream - Premium Streaming",
-    description: "Streaming anime terlengkap dengan kualitas terbaik.",
-    images: ["/images/placeholder.webp"],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const meta = await getSiteMetadata();
+
+  return {
+    title: meta.title,
+    description: meta.description,
+    keywords: meta.keywords,
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.sankavollerei.com"),
+    icons: {
+      icon: meta.faviconUrl || "/favicon.ico",
+    },
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url: "/",
+      siteName: meta.siteName,
+      images: [
+        {
+          url: meta.ogImage,
+          width: 1200,
+          height: 630,
+          alt: meta.siteName,
+        },
+      ],
+      locale: "id_ID",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: meta.title,
+      description: meta.description,
+      images: [meta.ogImage],
+    },
+  };
+}
 
 export default function RootLayout({
   children,

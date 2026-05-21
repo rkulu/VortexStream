@@ -96,7 +96,7 @@ export default function EpisodePageClient({ episodeId, data }: EpisodePageClient
               Prev
             </button>
           )}
-          {data.navigation.next ? (
+          {data.navigation.next && (
             <Link
               href={`/episode/${data.navigation.next.id}`}
               className="px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-[#00f4fe]/5 hover:border-[#00f4fe]/30 text-xs font-bold text-[#00f4fe] transition-all uppercase tracking-wider flex items-center gap-1 active:scale-95 cursor-pointer"
@@ -104,11 +104,6 @@ export default function EpisodePageClient({ episodeId, data }: EpisodePageClient
               Next
               <span className="material-symbols-outlined text-sm font-bold">arrow_forward</span>
             </Link>
-          ) : (
-            <button className="px-4 py-2 rounded-full border border-white/5 bg-white/5 opacity-30 text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1 cursor-not-allowed" disabled>
-              Next
-              <span className="material-symbols-outlined text-sm font-bold">arrow_forward</span>
-            </button>
           )}
         </div>
       </div>

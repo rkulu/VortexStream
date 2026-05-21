@@ -7,7 +7,7 @@ const navLinks = [
   { href: "/", label: "Beranda", icon: "home" },
   { href: "/film", label: "Film", icon: "movie" },
   { href: "/anime", label: "Anime", icon: "live_tv" },
-  { href: "/series", label: "K-Drama", icon: "theaters" },
+  { href: "/series", label: "Series", icon: "theaters" },
   { href: "/catalog", label: "Katalog & Cari", icon: "explore" },
   { href: "/daftar-saya", label: "Daftar Saya", icon: "favorite" },
 ];
@@ -17,7 +17,7 @@ export default function AsideSidebar() {
 
   return (
     <aside className="hidden md:flex h-screen w-[280px] fixed left-0 top-0 flex-col p-6 gap-6 bg-[#131315]/40 backdrop-blur-[24px] border-r border-[#4d4353]/20 shadow-2xl z-50 overflow-y-auto hide-scrollbar font-sans">
-      
+
       {/* Cyclone Logo Group */}
       <div className="flex items-center gap-3 px-2 py-2">
         <Link href="/" className="flex items-center gap-3 group">
@@ -31,7 +31,7 @@ export default function AsideSidebar() {
           </span>
         </Link>
       </div>
-      
+
       {/* Nav Links */}
       <nav className="flex flex-col gap-2 flex-1 mt-4">
         {navLinks.map((link) => {
@@ -40,13 +40,12 @@ export default function AsideSidebar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 border ${
-                isActive
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 border ${isActive
                   ? "bg-[#e0b6ff]/10 text-[#e0b6ff] border-[#e0b6ff]/20 font-bold"
                   : "text-[#d0c2d5] border-transparent hover:bg-white/5 hover:text-white"
-              }`}
+                }`}
             >
-              <span 
+              <span
                 className="material-symbols-outlined text-[22px]"
                 style={isActive ? { fontVariationSettings: "'FILL' 1" } : undefined}
               >
@@ -67,7 +66,7 @@ export default function AsideSidebar() {
           <span className="material-symbols-outlined text-[22px]">settings</span>
           <span className="font-medium">Pengaturan</span>
         </Link>
-        
+
         <div className="p-4 bg-[#1c1b1d]/60 backdrop-blur-md rounded-2xl flex items-center gap-3 border border-[#e0b6ff]/20">
           <div className="size-10 rounded-full overflow-hidden border border-[#e0b6ff]/30 flex-shrink-0">
             <img
