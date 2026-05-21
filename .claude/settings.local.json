@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"D:\\\\RidwanProject\\\\winbu-stream\" -Depth 1)",
+      "Bash(Format-Table Name, Mode -AutoSize)",
+      "Bash(Get-ChildItem -Recurse -Depth 3 -Directory)",
+      "Bash(Select-Object FullName)",
+      "PowerShell(Get-ChildItem -Recurse -Depth 3 -Directory -Name | ForEach-Object { $_ })",
+      "Bash(Get-ChildItem *)"
+    ]
+  }
+}
